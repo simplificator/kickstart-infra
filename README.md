@@ -1,5 +1,15 @@
 # Infrastructure as Code, using `terraform`
 
+This projects is intended to demonstrate how to 
+
+* configure [Semaphore 2.0](https://simplificator.semaphoreci.com/) pipeline 
+* use [Semaphore Secrets](https://docs.semaphoreci.com/article/66-environment-variables-and-secrets) for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+* provision AWS resources using terraform
+* hold terraform state in an S3 bucket
+
+
+## Terraform cheatsheet
+
 Required Environment Variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
 ```
@@ -9,8 +19,6 @@ terraform apply
 ```
 
 In scripts you might want to use the auto-approve option: `terraform apply -auto-approve`
-
-*Warning*: the created ElasticSearch service and Kibana will be open to the world!
 
 Consider destroying it using `terraform destroy`.
 
