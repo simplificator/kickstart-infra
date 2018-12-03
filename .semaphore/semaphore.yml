@@ -1,0 +1,26 @@
+version: v1.0
+name: AWS infrastructure as code
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Validate"
+    task:
+      jobs:
+      - name: Terraform plan
+        commands:
+          - checkout
+          - terraform init -backend=true
+          - terraform validate
+          - terraform plan
+
+  - name: "Apply"
+    task:
+      jobs:
+      - name: Terraform apply
+        commands:
+          - checkout
+          - terraform init -backend=true
+          - terraform apply -auto-approve
