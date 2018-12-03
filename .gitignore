@@ -4,3 +4,4 @@ terraform.tfstate.backup
 .terraform.tfvars
 *.iml
 .history
+semaphore-secrets.yml
