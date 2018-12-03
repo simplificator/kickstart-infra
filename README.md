@@ -20,5 +20,5 @@ Consider destroying it using `terraform destroy`.
 *Hint*: instead of installing `terraform` you might want to run it in a container, using 
 
 ```
-alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work hashicorp/terraform '
+alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work hashicorp/terraform:0.11.10 '
 ```
