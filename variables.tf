@@ -23,7 +23,7 @@ variable "aws_amis" {
 
 variable "key_name" {
   description = "Desired name of AWS key pair"
-  default = "terraform"
+  default = "kickstart"
 }
 
 variable "key_path" {

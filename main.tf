@@ -145,7 +145,7 @@ resource "aws_elb" "app" {
 }
 
 resource "aws_key_pair" "auth" {
-  key_name   = "${var.key_name}"
+  key_name   = "${var.project_env}-${var.project_name}"
   public_key = "${file("${var.key_path}/${var.key_name}.pub")}"
 }
 
@@ -190,7 +190,8 @@ resource "aws_instance" "app" {
       "sudo yum update -y",
       "sudo yum install -y docker",
       "sudo service docker start",
-      "sudo usermod -aG docker $USER"
+      "sudo usermod -aG docker $USER",
+      "sudo docker version"
     ]
   }
 }
