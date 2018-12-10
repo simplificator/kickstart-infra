@@ -33,13 +33,9 @@ variable "aws_region" {
   default     = "eu-central-1"
 }
 
-# Ubuntu Precise 12.04 LTS (x64)
+# Amazon Linux AMI 2018.03.0 (HVM)
 variable "aws_amis" {
   default = {
-    eu-central-1 = "ami-0cfbf4f6db41068ac" # Amazon Linux AMI 2018.03.0 (HVM)
-    eu-west-1    = "ami-674cbc1e"
-    us-east-1    = "ami-1d4e7a66"
-    us-west-1    = "ami-969ab1f6"
-    us-west-2    = "ami-8803e0f0"
+    eu-central-1 = "ami-0cfbf4f6db41068ac"
   }
 }

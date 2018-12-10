@@ -118,7 +118,7 @@ resource "aws_instance" "web" {
   # communicate with the resource (instance)
   connection {
     # The default username for our AMI
-    user = "ubuntu"
+    user = "ec2-user"
 
     # The connection will use the local SSH agent for authentication.
   }
