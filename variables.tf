@@ -1,4 +1,14 @@
 
+variable "project_name" {
+  description = "A descriptive name for your project. will be used to name and tag resources"
+  default     = "kickstart"
+}
+
+variable "project_env" {
+  description = "A descriptive name for your environment. will be used to name and tag resources"
+  default     = "DEMO"
+}
+
 variable "aws_region" {
   description = "AWS region to launch servers."
   default     = "eu-central-1"

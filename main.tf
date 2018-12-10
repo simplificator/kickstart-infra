@@ -16,11 +16,23 @@ provider "aws" {
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
   cidr_block = "10.0.0.0/16"
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
+  }
 }
 
 # Create an internet gateway to give our subnet access to the outside world
 resource "aws_internet_gateway" "default" {
   vpc_id = "${aws_vpc.default.id}"
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
+  }
 }
 
 # Grant the VPC internet access on its main route table
@@ -35,6 +47,12 @@ resource "aws_subnet" "default" {
   vpc_id                  = "${aws_vpc.default.id}"
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
+  }
 }
 
 # A security group for the ELB so it is accessible via the web
@@ -58,6 +76,12 @@ resource "aws_security_group" "elb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
+  }
 }
 
 # Our default security group to access
@@ -80,7 +104,8 @@ resource "aws_security_group" "default" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    # cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # outbound internet access
@@ -90,20 +115,32 @@ resource "aws_security_group" "default" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
+  }
 }
 
-resource "aws_elb" "web" {
+resource "aws_elb" "app" {
   name = "terraform-example-elb"
 
   subnets         = ["${aws_subnet.default.id}"]
   security_groups = ["${aws_security_group.elb.id}"]
-  instances       = ["${aws_instance.web.id}"]
+  instances       = ["${aws_instance.app.id}"]
 
   listener {
     instance_port     = 80
     instance_protocol = "http"
     lb_port           = 80
     lb_protocol       = "http"
+  }
+
+  tags {
+    Name = "${var.project_env}-${var.project_name}"
+    Environment = "${var.project_env}"
+    Project = "${var.project_name}"
   }
 }
 
@@ -112,7 +149,7 @@ resource "aws_key_pair" "auth" {
   public_key = "${file("${var.key_path}/${var.key_name}.pub")}"
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "app" {
   instance_type = "t2.micro"
 
   # Lookup the correct AMI based on the region
@@ -129,7 +166,12 @@ resource "aws_instance" "web" {
   # backend instances.
   subnet_id = "${aws_subnet.default.id}"
 
-
+  tags {
+    Name = "${var.project_env}-${var.project_name}-app"
+    Environment = "${var.project_env}"
+    Role = "app"
+    Project = "${var.project_name}"
+  }
 
   # The connection block tells our provisioner how to
   # communicate with the resource (instance)
@@ -148,8 +190,7 @@ resource "aws_instance" "web" {
       "sudo yum update -y",
       "sudo yum install -y docker",
       "sudo service docker start",
-      "sudo usermod -aG docker $USER",
-      "docker run -d -p 80:80 nginx"
+      "sudo usermod -aG docker $USER"
     ]
   }
 }
