@@ -145,9 +145,11 @@ resource "aws_instance" "web" {
   # this should be on port 80
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get -y update",
-      "sudo apt-get -y install nginx",
-      "sudo service nginx start",
+      "sudo yum update -y",
+      "sudo yum install -y docker",
+      "sudo groupadd docker",
+      "sudo usermod -aG docker $USER",
+      "docker run -d -p 80:80 nginx"
     ]
   }
 }
