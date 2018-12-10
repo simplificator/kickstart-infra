@@ -109,24 +109,13 @@ resource "aws_elb" "web" {
 
 resource "aws_key_pair" "auth" {
   key_name   = "${var.key_name}"
-  #public_key = "${file(var.public_key_path)}"
-  public_key = "${var.public_key}"
+  public_key = "${file("${var.key_path}/${var.key_name}.pub")}"
 }
 
 resource "aws_instance" "web" {
-  # The connection block tells our provisioner how to
-  # communicate with the resource (instance)
-  connection {
-    # The default username for our AMI
-    user = "ec2-user"
-
-    # The connection will use the local SSH agent for authentication.
-  }
-
   instance_type = "t2.micro"
 
   # Lookup the correct AMI based on the region
-  # we specified
   ami = "${lookup(var.aws_amis, var.aws_region)}"
 
   # The name of our SSH keypair we created above.
@@ -140,6 +129,17 @@ resource "aws_instance" "web" {
   # backend instances.
   subnet_id = "${aws_subnet.default.id}"
 
+
+
+  # The connection block tells our provisioner how to
+  # communicate with the resource (instance)
+  connection {
+    # The default username for our AMI
+    user = "ec2-user"
+    private_key = "${file("${var.key_path}/${var.key_name}")}"
+    # The connection will use the local SSH agent for authentication.
+  }
+
   # We run a remote provisioner on the instance after creating it.
   # In this case, we just install nginx and start it. By default,
   # this should be on port 80
@@ -147,7 +147,7 @@ resource "aws_instance" "web" {
     inline = [
       "sudo yum update -y",
       "sudo yum install -y docker",
-      "sudo groupadd docker",
+      "sudo service docker start",
       "sudo usermod -aG docker $USER",
       "docker run -d -p 80:80 nginx"
     ]
