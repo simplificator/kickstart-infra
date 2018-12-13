@@ -9,10 +9,10 @@ blocks:
   - name: "Validate"
     task:
       secrets:
-        - name: kickstart-infra-aws
+        - name: kickstart-infra
       prologue:
         commands:
-          - alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work hashicorp/terraform:0.11.10 '
+          - alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work -v ~/.ssh:/root/.ssh hashicorp/terraform:0.11.10 '
           - terraform -v
       jobs:
       - name: Terraform plan
@@ -25,10 +25,10 @@ blocks:
   - name: "Apply"
     task:
       secrets:
-        - name: kickstart-infra-aws
+        - name: kickstart-infra
       prologue:
         commands:
-          - alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work hashicorp/terraform:0.11.10 '
+          - alias terraform='docker run --rm -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -w /work -v $(pwd):/work -v ~/.ssh:/root/.ssh hashicorp/terraform:0.11.10 '
           - terraform -v
       jobs:
       - name: Terraform apply
