@@ -183,8 +183,10 @@ resource "aws_instance" "app" {
   }
 
   # We run a remote provisioner on the instance after creating it.
-  # In this case, we just install nginx and start it. By default,
-  # this should be on port 80
+  # In this case, we install docker and start the respective service.
+  # Alternatively this could be done by providing a pre-baked AMI.
+  # However, it is good practice to check with `remote-exec` that connection is possible 
+  # and hence the instance is ready for any further usage (e.g. in deployment pipelines).
   provisioner "remote-exec" {
     inline = [
       "sudo yum update -y",
